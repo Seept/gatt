@@ -111,6 +111,7 @@ type Notifier interface {
 	// Cap returns the maximum number of bytes that may be sent
 	// in a single notification.
 	Cap() int
+	SetCap(int)
 }
 
 type notifier struct {
@@ -132,6 +133,10 @@ func (n *notifier) Write(b []byte) (int, error) {
 		return 0, errors.New("central stopped notifications")
 	}
 	return n.central.sendNotification(n.a, b)
+}
+
+func (n *notifier) SetCap(cap int) {
+	n.maxlen = cap
 }
 
 func (n *notifier) Cap() int {
